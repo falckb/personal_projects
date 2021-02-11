@@ -47,21 +47,31 @@ def get_sports_job_postings():
         old_all_list = pickle.load(f)
 
     just_new = set(all_list) - set(old_all_list)
+    too_many = 'Too many job postings...'
 
     # Check if the set of differences between the old set and new set is empty, then print only the differences
     isEmpty = (len(just_new) == 0)
+    total_entry = []
     if isEmpty:
-        print('No new postings.')
+        total_entry += ['No new postings.']
     else:
-        print('There are ' + str(len(just_new)) + ' new jobs for you:')
         for entry in just_new:
             entrysplit = entry.split('|')
-            print(entrysplit[0] + ' at ' + entrysplit[1] + '\nInterested?  | ' + entrysplit[2] + '\n')
-
+            post = '\n- ' + entrysplit[0] + ' at ' + entrysplit[1] + '\n'
+            total_entry.append(post)
+    
+    # Turn list of all new jobs into one string
+    return_string = ' '.join(total_entry)
+      
     # Overwrite the old text file with new data so when it's run again, it only compares postings to the last time function was run
     with open('/Users/User/Desktop/falck_workspace/one_offs/other_files/two_jobs.txt', 'wb') as f:
         pickle.dump(all_list, f)
 
-    return
+    if len(return_string)>1600:
+        return too_many
+    else:
+        return return_string
+    
 
-get_sports_job_postings()
+if __name__ == "__main__":
+    get_sports_job_postings()
